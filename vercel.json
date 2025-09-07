@@ -1,0 +1,5 @@
+{
+  "buildCommand": "cd palmira-delights-shop-main && npm run build",
+  "outputDirectory": "palmira-delights-shop-main/dist",
+  "installCommand": "cd palmira-delights-shop-main && npm install"
+}
