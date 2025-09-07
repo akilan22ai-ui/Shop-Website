@@ -2,15 +2,17 @@ import React, { useState, useEffect } from 'react';
 
 interface LoadingScreenProps {
   onComplete: () => void;
+  caseVariant?: 'lower' | 'upper';
 }
 
-const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
+const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete, caseVariant = 'lower' }) => {
   const [currentLetterIndex, setCurrentLetterIndex] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
   const [showSubtitle, setShowSubtitle] = useState(false);
 
-  const brandName = "PALMYRA";
+  const brandNameRaw = 'palmyra';
+  const brandName = caseVariant === 'upper' ? brandNameRaw.toUpperCase() : brandNameRaw;
   const letters = brandName.split('');
 
   useEffect(() => {
@@ -56,32 +58,28 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
         isExiting ? 'opacity-0 scale-95' : 'opacity-100 scale-100'
       }`}
       style={{
-        background: 'linear-gradient(135deg, #FFFFFF 0%, #F8F9FA 100%)'
+        background: '#FFFFFF'
       }}
     >
-      {/* Animated background pattern */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-br from-red-50 to-transparent opacity-30 animate-pulse"></div>
-        <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-gradient-to-tl from-red-50 to-transparent opacity-30 animate-pulse" style={{ animationDelay: '1s' }}></div>
-      </div>
 
       {/* Brand name container */}
       <div className="relative z-10">
-        <div className="flex items-center justify-center space-x-1 sm:space-x-2">
+        <div className="flex items-center justify-center space-x-1 sm:space-x-2" style={{ fontFamily: `'Rubik', 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'` }}>
           {letters.map((letter, index) => (
             <div
               key={index}
-              className={`text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-black transition-all duration-500 ease-out relative overflow-hidden ${
+              className={`text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-extrabold transition-all duration-700 ease-out relative overflow-hidden ${
                 index <= currentLetterIndex
                   ? 'opacity-100 transform translate-y-0 scale-100'
                   : 'opacity-0 transform translate-y-8 scale-75'
               }`}
               style={{
                 color: '#FF0000',
-                textShadow: '0 4px 8px rgba(255, 0, 0, 0.3), 0 8px 16px rgba(255, 0, 0, 0.2)',
-                animationDelay: `${index * 100}ms`,
+                textShadow: '0 6px 14px rgba(255, 0, 0, 0.25)',
+                letterSpacing: caseVariant === 'upper' ? '0.06em' : '0.02em',
+                animationDelay: `${index * 140}ms`,
                 animation: index <= currentLetterIndex 
-                  ? 'letterReveal 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards'
+                  ? 'letterDrop 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards'
                   : 'none'
               }}
             >
@@ -90,7 +88,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
                 <div 
                   className="absolute inset-0 shimmer-effect"
                   style={{
-                    animationDelay: `${index * 100 + 400}ms`
+                    animationDelay: `${index * 140 + 420}ms`
                   }}
                 />
               )}
@@ -133,61 +131,41 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
 
       {/* CSS Animations */}
       <style jsx>{`
-        @keyframes letterReveal {
+        @keyframes letterDrop {
           0% {
             opacity: 0;
-            transform: translateY(40px) scale(0.6) rotateX(90deg) rotateY(15deg);
-            filter: blur(4px);
-          }
-          30% {
-            transform: translateY(-15px) scale(1.15) rotateX(0deg) rotateY(0deg);
-            filter: blur(0px);
+            transform: translateY(-120%) scale(0.9);
+            filter: blur(2px);
           }
           60% {
-            transform: translateY(5px) scale(0.95) rotateX(0deg) rotateY(0deg);
+            opacity: 1;
+            transform: translateY(8%) scale(1.02);
+            filter: blur(0px);
+          }
+          80% {
+            transform: translateY(-4%) scale(0.995);
           }
           100% {
-            opacity: 1;
-            transform: translateY(0) scale(1) rotateX(0deg) rotateY(0deg);
-            filter: blur(0px);
+            transform: translateY(0) scale(1);
           }
         }
 
         @keyframes fadeInUp {
-          0% {
-            opacity: 0;
-            transform: translateY(30px) scale(0.9);
-            filter: blur(2px);
-          }
-          100% {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-            filter: blur(0px);
-          }
+          0% { opacity: 0; transform: translateY(30px) scale(0.98); }
+          100% { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         @keyframes shimmer {
-          0% {
-            background-position: -200% 0;
-          }
-          100% {
-            background-position: 200% 0;
-          }
+          0% { background-position: -200% 0; }
+          100% { background-position: 200% 0; }
         }
 
-        .animate-fadeInUp {
-          animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-        }
+        .animate-fadeInUp { animation: fadeInUp 0.8s ease-out forwards; }
 
         .shimmer-effect {
-          background: linear-gradient(
-            90deg,
-            transparent,
-            rgba(255, 255, 255, 0.4),
-            transparent
-          );
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent);
           background-size: 200% 100%;
-          animation: shimmer 2s infinite;
+          animation: shimmer 2.2s ease-in-out infinite;
         }
       `}</style>
     </div>

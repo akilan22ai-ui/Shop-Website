@@ -58,7 +58,7 @@ const HeroBanner = () => {
       {/* Background Image with Overlay */}
       <div className="absolute inset-0">
         <div 
-          className="w-full h-full bg-cover bg-center bg-no-repeat transition-all duration-1000 ease-in-out"
+          className="w-full h-full bg-contain sm:bg-cover bg-center bg-no-repeat transition-all duration-1000 ease-in-out"
           style={{
             backgroundImage: `url(${currentSlideData.image})`,
             transform: `scale(${isVideoLoaded ? 1.05 : 1})`
